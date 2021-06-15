@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import styles from "./App.module.scss";
 import CardsContainer from "./components/CardsContainer";
@@ -19,12 +19,28 @@ const renderDate = () => {
 
 function App() {
   // Display Currencies State
-  const [currencies, setCurrencies] = useState([]);
+
+  // Set Currency Amount Input State
+  const [inputValue, setInputValue] = useState(0);
 
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [amount, setAmount] = useState(0);
+
+  // Active Currencies Will Represent The User Selected Currencies
+  const [activeCurrencies, setActiveCurrencies] = useState([]);
+
+  // Addable Currencies That Haven't Been Yet Added For Use
+  const [addableCurrencies, setAddableCurrencies] = useState([]);
+
+  // We'll import the currencies data from the currencies.json file
+  let data = require("./currencies.json");
+
+  useEffect(() => {
+    showModal && document.body.setAttribute("style", "overflow: hidden");
+    !showModal && document.body.setAttribute("style", "overflow: unset");
+  }, [showModal]);
 
   return (
     <div className="App">
@@ -40,27 +56,22 @@ function App() {
             }
           </h2>
           <CardsContainer
-            currencies={currencies}
-            setCurrencies={setCurrencies}
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
             selectedCurrency={selectedCurrency}
             setSelectedCurrency={setSelectedCurrency}
             amount={amount}
             setAmount={setAmount}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            currencyData={data}
           />
         </div>
-        <button
-          className={
-            showModal ? styles.activeModalButton : styles.closedModalButton
-          }
-          onClick={() => setShowModal((prevState) => !prevState)}>
+        <button onClick={() => setShowModal((prevState) => !prevState)}>
           Add Currency
         </button>
       </div>
-      {showModal && (
-        <Modal currencies={currencies} setCurrencies={setCurrencies} />
-      )}
+      {showModal && <Modal setShowModal={setShowModal} />}
     </div>
   );
 }

@@ -2,6 +2,9 @@
 .defaultCard {
   width: 24%;
   cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  padding: 0.75rem;
 
   // Spaces between cards will be the same one as the margin at the bottom of each card
   margin-bottom: calc((60 / 100) * ((100vw - 24vw * 4) / 3));

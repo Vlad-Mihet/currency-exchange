@@ -1,0 +1,42 @@
+[
+  {
+    "flag": "us",
+    "currency": "US Dollar",
+    "currencyCode": "USD"
+  },
+  {
+    "flag": "ca",
+    "currency": "Canadian Dollar",
+    "currencyCode": "CAD"
+  },
+  {
+    "flag": "ru",
+    "currency": "Russian Ruble",
+    "currencyCode": "RUB"
+  },
+  {
+    "flag": "eu",
+    "currency": "Euro",
+    "currencyCode": "EUR"
+  },
+  {
+    "flag": "in",
+    "currency": "Indian Rupee",
+    "currencyCode": "INR"
+  },
+  {
+    "flag": "tr",
+    "currency": "Turkish Lira",
+    "currencyCode": "TRY"
+  },
+  {
+    "flag": "no",
+    "currency": "Norwegian Krone",
+    "currencyCode": "NOK"
+  },
+  {
+    "flag": "mx",
+    "currency": "Mexican Peso",
+    "currencyCode": "MXN"
+  }
+]
