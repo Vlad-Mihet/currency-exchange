@@ -15,40 +15,68 @@
     background-color: #fff;
     width: 60vw;
     height: 50vh;
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-end;
-    box-sizing: border-box;
-    padding: 0.75rem;
 
     .cards__container {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       flex-wrap: wrap;
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding: 0.75rem;
     }
 
-    button {
-      z-index: 2;
-      width: 25%;
-      max-width: 200px;
+    .bottom__wrapper {
       box-sizing: border-box;
-      padding: 0.55rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1.15rem;
-      color: #fff;
-      font-family: "Poppins", sans-serif;
-      font-weight: 600;
-      transition: 0.25s ease-in-out;
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
 
-      background-color: #0c8c95;
+      // Styling for little overlay effect detail
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 2;
+      box-shadow: -1px -1px 16px 6px rgba(100, 100, 100, 0.125);
 
-      &:hover {
-        background-color: #0a5568;
+      span {
+        color: #5d5d5d;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      button {
+        z-index: 2;
+        width: 25%;
+        max-width: 200px;
+        box-sizing: border-box;
+        padding: 0.55rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.15rem;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        transition: 0.25s ease-in-out;
+
+        background-color: #0c8c95;
+
+        &:hover {
+          background-color: #0a5568;
+        }
       }
     }
   }

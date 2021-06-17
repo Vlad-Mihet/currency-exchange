@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
+import DatePicker from "./components/DatePicker";
 import "./App.css";
 import styles from "./App.module.scss";
 import CardsContainer from "./components/CardsContainer";
 import Modal from "./components/Modal";
-
-const renderDate = () => {
-  let today = new Date();
-  let day = today.getDate();
-  let month = today.getMonth() + 1;
-  let year = today.getFullYear();
-
-  if (day < 10) day = "0" + day;
-
-  if (month < 10) month = "0" + month;
-
-  return day + "/" + month + "/" + year;
-};
+import axios from "axios";
 
 function App() {
-  // Display Currencies State
+  // Exchange Rates Data State
+
+  // This will change whenever a new currency is used as the base currency
+  const [exchangeData, setExchangeData] = useState({});
 
   // Set Currency Amount Input State
   const [inputValue, setInputValue] = useState(0);
@@ -28,11 +20,22 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [amount, setAmount] = useState(0);
 
+  // Generate New Date Data For Today
+  let today = new Date();
+  let day = today.getDate();
+  let month = today.getMonth();
+  let year = today.getFullYear();
+
+  const [date, setDate] = useState(new Date(year, month, day));
+  const [dateHelperState, setDateHelperState] = useState(
+    new Date(year, month, day),
+  );
+
   // Active Currencies Will Represent The User Selected Currencies
   const [activeCurrencies, setActiveCurrencies] = useState([]);
 
-  // Addable Currencies That Haven't Been Yet Added For Use
-  const [addableCurrencies, setAddableCurrencies] = useState([]);
+  // State For The Modal Selected Currencies
+  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
 
   // We'll import the currencies data from the currencies.json file
   let data = require("./currencies.json");
@@ -42,6 +45,39 @@ function App() {
     !showModal && document.body.setAttribute("style", "overflow: unset");
   }, [showModal]);
 
+  const requestExchangeRatesData = async () => {
+    let day = date.getDate();
+    let month = date.getMonth();
+
+    if (day < 10) day = "0" + day;
+    if (month < 10) month = "0" + month;
+
+    let year = date.getFullYear();
+
+    // We'll check before making a call whether or not the date has been changed as well
+    // As the exchange data will remain in the state, so not further updates will be needed
+
+    // We'll check to see whether or not the date was changed
+    // Or we don't have the exchange rates data yet in order
+    // To make a request to the exchange rates api
+    if (
+      dateHelperState.getTime() != date.getTime() ||
+      (exchangeData &&
+        Object.keys(exchangeData).length === 0 &&
+        exchangeData.constructor === Object)
+    ) {
+      console.log(dateHelperState.getTime(), date.getTime());
+
+      const result = await axios.get(
+        `http://api.exchangeratesapi.io/v1/${year}-${month}-${day}?access_key=${process.env.REACT_APP_EXCHANGE_RATE_API}&base=EUR`,
+      );
+
+      setExchangeData(result.data.rates);
+
+      setDateHelperState(date);
+    }
+  };
+
   return (
     <div className="App">
       <div className={styles.container}>
@@ -49,29 +85,54 @@ function App() {
             will include the header, today's date as well as the currency cards */}
         <div className={styles.top__wrapper}>
           <h1>Currency Exchange</h1>
-          <h2>
-            {
-              // Here we'll store today's date in a 'dd/mm/yyyy' format
-              renderDate()
-            }
-          </h2>
-          <CardsContainer
-            activeCardIndex={activeCardIndex}
-            setActiveCardIndex={setActiveCardIndex}
-            selectedCurrency={selectedCurrency}
-            setSelectedCurrency={setSelectedCurrency}
-            amount={amount}
-            setAmount={setAmount}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            currencyData={data}
-          />
+          <div className={styles.picker__wrapper}>
+            <DatePicker
+              date={date}
+              setDate={setDate}
+              dateHelperState={dateHelperState}
+              setDateHelperState={setDateHelperState}
+            />
+          </div>
+          {activeCurrencies.length > 0 ? (
+            <CardsContainer
+              activeCardIndex={activeCardIndex}
+              setActiveCardIndex={setActiveCardIndex}
+              selectedCurrency={selectedCurrency}
+              setSelectedCurrency={setSelectedCurrency}
+              amount={amount}
+              setAmount={setAmount}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              currencyData={data}
+              activeCurrencies={activeCurrencies}
+              setActiveCurrencies={setActiveCurrencies}
+              requestExchangeRatesData={requestExchangeRatesData}
+              exchangeData={exchangeData}
+            />
+          ) : (
+            <div className={styles.noCurrencyText}>
+              <p>You haven't selected any currencies to show here yet.</p>
+              <p>
+                Be sure to select one or more by clicking the button at the
+                bottom of the screen.
+              </p>
+            </div>
+          )}
         </div>
         <button onClick={() => setShowModal((prevState) => !prevState)}>
           Add Currency
         </button>
       </div>
-      {showModal && <Modal setShowModal={setShowModal} />}
+      {showModal && (
+        <Modal
+          setShowModal={setShowModal}
+          activeCurrencies={activeCurrencies}
+          setActiveCurrencies={setActiveCurrencies}
+          currencyData={data}
+          selectedCurrencies={selectedCurrencies}
+          setSelectedCurrencies={setSelectedCurrencies}
+        />
+      )}
     </div>
   );
 }

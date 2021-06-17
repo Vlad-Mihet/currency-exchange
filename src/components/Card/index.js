@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import generateExchangeRate from "../../helpers/exchangeHelper";
 
 export default function Card({
   activeCardIndex,
@@ -7,11 +10,15 @@ export default function Card({
   cardIndex,
   inputValue,
   setInputValue,
+  currencyId,
   currencyCode,
   currencyName,
   currencyFlag,
   selectedCurrency,
   setSelectedCurrency,
+  setActiveCurrencies,
+  requestExchangeRatesData,
+  exchangeData,
 }) {
   // As we'll use inputValue as a global input state to retain the value according to which we'll convert,
   // We'll use an adittional card-based input value state to not change all of the other cards' values
@@ -33,58 +40,78 @@ export default function Card({
       className={
         activeCardIndex === cardIndex ? styles.activeCard : styles.defaultCard
       }>
-      <img
-        src={require(`../../../public/assets/country_flags_png/${currencyFlag}.png`)}
-        alt={currencyFlag}
+      <FontAwesomeIcon
+        icon={faTimes}
+        onClick={() =>
+          setActiveCurrencies((prevState) =>
+            prevState.filter(
+              (stateCurrencyId) => stateCurrencyId !== currencyId,
+            ),
+          )
+        }
       />
-      <div className={styles.content__container}>
-        <div className={styles.left__col}></div>
-        <div className={styles.right__col}>
-          <p>Card</p>
-          <input
-            type="number"
-            name="amount"
-            placeholder="Please Input The Amount You Want To Convert"
-            value={localInputValue}
-            onChange={(e) => setLocalInputValue(e.target.value)}
-            onFocus={() => setActiveCardIndex(cardIndex)}
-            onBlur={(e) => {
-              // On blurring from the actual card we've just updated the local input value of
-              // We'll update the other cards' values as well in order to have the default value
-              // for which we'll convert
-
-              setInputValue(e.target.value);
-              activeCardIndex === cardIndex && setActiveCardIndex(null);
-
-              // Change the main currency only if there was a change made to the amount
-              if (localInputValue !== inputValue) {
-                setSelectedCurrency(currencyCode);
-                setInputValue(localInputValue);
-              }
-            }}
-          />
-          {/* AUD will represent the card currency abbreviation */}
-          {/* Asutralian Dollar will represent the card currency name */}
-          <p>
-            {currencyCode} - {currencyName}
-          </p>
-
-          {/* EUR will represent the selected currency */}
-          {/* We'll also give the currency exchange specific to one day */}
-          <p>
-            1 {currencyCode} ={" "}
-            {(
-              items[Math.floor(Math.random() * items.length)] *
-              items[Math.floor(Math.random() * items.length)] *
-              inputValue *
-              1.2324
-            ).toFixed(4)}{" "}
-            {selectedCurrency}
-          </p>
-
-          {/* Test to see if a currency conversion would work fine */}
-        </div>
+      <div className={styles.image__wrapper}>
+        <img
+          src={
+            require(`../../../public/assets/country_flags_png/${currencyFlag}.png`)
+              .default
+          }
+          alt={currencyFlag}
+        />
       </div>
+      {/* AUD will represent the card currency abbreviation */}
+      {/* Asutralian Dollar will represent the card currency name */}
+      <p>
+        {currencyCode} - {currencyName}
+      </p>
+
+      {/* EUR will represent the selected currency */}
+      {/* We'll also give the currency exchange specific to one day */}
+      {selectedCurrency && (
+        <p>
+          {inputValue} {currencyCode} ={" "}
+          {selectedCurrency === "EUR"
+            ? (inputValue / exchangeData[currencyCode]).toFixed(4)
+            : (
+                inputValue *
+                generateExchangeRate(
+                  exchangeData[currencyCode],
+                  exchangeData[selectedCurrency],
+                )
+              ).toFixed(4)}{" "}
+          {selectedCurrency}
+        </p>
+      )}
+
+      <div className={styles.input__wrapper}>
+        <label htmlFor="amount">Exchange Amount</label>
+        <input
+          type="number"
+          name="amount"
+          placeholder="Please Input The Amount You Wish To Exchange"
+          value={localInputValue}
+          onChange={(e) => setLocalInputValue(e.target.value)}
+          onFocus={() => setActiveCardIndex(cardIndex)}
+          onBlur={(e) => {
+            // On blurring from the actual card we've just updated the local input value of
+            // We'll update the other cards' values as well in order to have the default value
+            // for which we'll convert
+
+            setInputValue(e.target.value);
+            activeCardIndex === cardIndex && setActiveCardIndex(null);
+
+            // Change the main currency only if there was a change made to the amount
+            if (localInputValue !== inputValue) {
+              setSelectedCurrency(currencyCode);
+              setInputValue(localInputValue);
+            }
+
+            requestExchangeRatesData();
+          }}
+        />
+      </div>
+
+      {/* Test to see if a currency conversion would work fine */}
     </div>
   );
 }

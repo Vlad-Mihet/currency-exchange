@@ -15,6 +15,11 @@
       color: #333;
       margin-top: 0;
     }
+
+    .picker__wrapper {
+      width: 30%;
+      margin: 0 auto 2.5rem;
+    }
   }
 
   button {
@@ -37,6 +42,16 @@
 
     &:hover {
       background-color: #0a5568;
+    }
+  }
+
+  .noCurrencyText {
+    color: #a0a0a0;
+    font-weight: 600;
+    font-size: 1.15rem;
+
+    p {
+      margin: 0.25rem;
     }
   }
 }

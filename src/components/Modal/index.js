@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Card from "../ModalCard";
 import styles from "./index.module.scss";
 
-export default function Modal({ currencies, setCurrencies, setShowModal }) {
-  // We'll need the currencies state as well to make sure we won't render
-  // the option to add a currency that is already active
-
-  const [selectedCards, setSelectedCards] = useState([]);
-
+export default function Modal({
+  activeCurrencies,
+  setActiveCurrencies,
+  setShowModal,
+  currencyData,
+  selectedCurrencies,
+  setSelectedCurrencies,
+}) {
   function useOutsideAlerter(ref, setShowModal) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -28,18 +30,47 @@ export default function Modal({ currencies, setCurrencies, setShowModal }) {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, setShowModal);
 
+  useEffect(() => {
+    console.log(activeCurrencies);
+  }, [activeCurrencies]);
+
   return (
     <div className={styles.overshadow}>
       <div ref={wrapperRef} className={styles.container}>
         <div className={styles.cards__container}>
-          {[...Array(5)].map((_, index) => (
-            // Filter and make sure these cards are not already in the main interface
-            <Card key={index} />
-          ))}
+          {currencyData.map(
+            (data, index) =>
+              !activeCurrencies.includes(data.id) && (
+                // Filter and make sure these cards are not already in the main interface
+                <Card
+                  key={index}
+                  cardIndex={index}
+                  currencyId={data.id}
+                  currencyCode={data.currencyCode}
+                  currencyName={data.currency}
+                  currencyFlag={data.flag}
+                  selected={selectedCurrencies.includes(data.id)}
+                  selectedCurrencies={selectedCurrencies}
+                  setSelectedCurrencies={setSelectedCurrencies}
+                />
+              ),
+          )}
         </div>
-        <button onClick={() => setShowModal((prevState) => !prevState)}>
-          Add
-        </button>
+        <div className={styles.bottom__wrapper}>
+          <span onClick={() => setSelectedCurrencies([])}>Unselect All</span>
+          <button
+            onClick={() => {
+              setActiveCurrencies((prevState) => [
+                ...prevState,
+                ...selectedCurrencies,
+              ]);
+
+              setSelectedCurrencies([]);
+              setShowModal(false);
+            }}>
+            Add
+          </button>
+        </div>
       </div>
     </div>
   );
