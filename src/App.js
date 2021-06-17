@@ -5,6 +5,7 @@ import styles from "./App.module.scss";
 import CardsContainer from "./components/CardsContainer";
 import Modal from "./components/Modal";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 
 function App() {
   // Exchange Rates Data State
@@ -80,6 +81,10 @@ function App() {
 
   return (
     <div className="App">
+      <Helmet>
+        <title>Currency Exchange | Vlad Mihet</title>
+        <meta charSet="UTF-8" />
+      </Helmet>
       <div className={styles.container}>
         {/* top__wrapper will represent our top section which 
             will include the header, today's date as well as the currency cards */}
