@@ -1,0 +1,52 @@
+.container {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  box-shadow: 1px 1px 16px 6px rgba(100, 100, 100, 0.125);
+
+  .wrapper {
+    border: 1px solid #e7eaed;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0.35rem 0.65rem;
+
+    svg {
+      margin-right: 0.35rem;
+
+      path {
+        transition: 0.15s ease-in-out;
+      }
+    }
+
+    .focused {
+      path {
+        fill: #343434;
+      }
+    }
+
+    .unfocused {
+      path {
+        fill: #a0a0a0;
+      }
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: "Poppins", sans-serif;
+      color: #343434;
+      font-weight: 600;
+      font-size: 1rem;
+
+      &::placeholder {
+        color: #a0a0a0;
+      }
+    }
+  }
+}

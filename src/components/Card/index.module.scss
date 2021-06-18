@@ -1,12 +1,13 @@
 .activeCard,
 .defaultCard {
-  width: 24%;
+  width: 100%;
   cursor: pointer;
   text-align: left;
   box-sizing: border-box;
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: relative;
 
   // Spaces between cards will be the same one as the margin at the bottom of each card
@@ -157,6 +158,35 @@
           fill: red;
         }
       }
+    }
+  }
+}
+
+// Very Small Devices & Small Devices
+@media (max-width: 767.98px) {
+  .activeCard,
+  .defaultCard {
+    svg {
+      opacity: 1;
+    }
+
+    .image__currency__wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+
+      .image__wrapper {
+        flex: 1;
+      }
+
+      p {
+        flex: 2;
+        margin: 0;
+      }
+    }
+
+    .image__wrapper {
+      margin-bottom: 0.5rem;
     }
   }
 }

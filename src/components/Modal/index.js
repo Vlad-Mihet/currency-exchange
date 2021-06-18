@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Card from "../ModalCard";
+import SearchInput from "../SearchInput";
 import styles from "./index.module.scss";
 
 export default function Modal({
@@ -10,6 +11,12 @@ export default function Modal({
   selectedCurrencies,
   setSelectedCurrencies,
 }) {
+  // We'll use state for the search input value
+  const [searchInputValue, setSearchInputValue] = useState("");
+
+  // We'll use a focus state to know when the input is being in focus
+  const [searchFocus, setSearchFocus] = useState(false);
+
   function useOutsideAlerter(ref, setShowModal) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -37,23 +44,48 @@ export default function Modal({
   return (
     <div className={styles.overshadow}>
       <div ref={wrapperRef} className={styles.container}>
+        <SearchInput
+          searchFocus={searchFocus}
+          setSearchFocus={setSearchFocus}
+          searchInputValue={searchInputValue}
+          setSearchInputValue={setSearchInputValue}
+        />
         <div className={styles.cards__container}>
-          {currencyData.map(
-            (data, index) =>
-              !activeCurrencies.includes(data.id) && (
-                // Filter and make sure these cards are not already in the main interface
-                <Card
-                  key={index}
-                  cardIndex={index}
-                  currencyId={data.id}
-                  currencyCode={data.currencyCode}
-                  currencyName={data.currency}
-                  currencyFlag={data.flag}
-                  selected={selectedCurrencies.includes(data.id)}
-                  selectedCurrencies={selectedCurrencies}
-                  setSelectedCurrencies={setSelectedCurrencies}
-                />
-              ),
+          {/* We'll check to see whether or not the user added all of the avaible preset currencies to the main UI */}
+          {currencyData.length === activeCurrencies.length ? (
+            <p
+              style={{
+                color: "#a0a0a0",
+                fontWeight: 600,
+                fontSize: "1.15rem",
+              }}>
+              There are no more currencies available for you to add at this
+              moment.
+            </p>
+          ) : (
+            currencyData.map(
+              (data, index) =>
+                !activeCurrencies.includes(data.id) &&
+                (data.currencyCode
+                  .toLowerCase()
+                  .includes(searchInputValue.toLowerCase()) ||
+                  data.currency
+                    .toLowerCase()
+                    .includes(searchInputValue.toLowerCase())) && (
+                  // Filter and make sure these cards are not already in the main interface
+                  <Card
+                    key={index}
+                    cardIndex={index}
+                    currencyId={data.id}
+                    currencyCode={data.currencyCode}
+                    currencyName={data.currency}
+                    currencyFlag={data.flag}
+                    selected={selectedCurrencies.includes(data.id)}
+                    selectedCurrencies={selectedCurrencies}
+                    setSelectedCurrencies={setSelectedCurrencies}
+                  />
+                ),
+            )
           )}
         </div>
         <div className={styles.bottom__wrapper}>

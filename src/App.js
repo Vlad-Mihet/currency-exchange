@@ -79,6 +79,12 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    // We'll use a date based useEffect listener in order to update the exchange rates everytime the date is updated
+
+    requestExchangeRatesData();
+  }, [date]);
+
   return (
     <div className="App">
       <Helmet>

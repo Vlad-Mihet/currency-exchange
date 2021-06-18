@@ -24,10 +24,7 @@ export default function Card({
   // We'll use an adittional card-based input value state to not change all of the other cards' values
 
   const [localInputValue, setLocalInputValue] = useState(inputValue);
-
-  let items = [
-    0.24, 1.24, 0.75, 0.2, 0.21421, 2, 1.241, 0.431, 1.241, 4.341, 1.4638, 2.57,
-  ];
+  const [inFocus, setInFocus] = useState(false);
 
   console.log(currencyFlag);
 
@@ -50,36 +47,35 @@ export default function Card({
           )
         }
       />
-      <div className={styles.image__wrapper}>
-        <img
-          src={
-            require(`../../../public/assets/country_flags_png/${currencyFlag}.png`)
-              .default
-          }
-          alt={currencyFlag}
-        />
+      <div className={styles.image__currency__wrapper}>
+        <div className={styles.image__wrapper}>
+          <img
+            src={
+              require(`../../../public/assets/country_flags_png/${currencyFlag}.png`)
+                .default
+            }
+            alt={currencyFlag}
+          />
+        </div>
+        {/* AUD will represent the card currency abbreviation */}
+        {/* Asutralian Dollar will represent the card currency name */}
+        <p>
+          {currencyCode} - {currencyName}
+        </p>
       </div>
-      {/* AUD will represent the card currency abbreviation */}
-      {/* Asutralian Dollar will represent the card currency name */}
-      <p>
-        {currencyCode} - {currencyName}
-      </p>
 
       {/* EUR will represent the selected currency */}
       {/* We'll also give the currency exchange specific to one day */}
       {selectedCurrency && (
         <p>
-          {inputValue} {currencyCode} ={" "}
+          1 {selectedCurrency} ={" "}
           {selectedCurrency === "EUR"
-            ? (inputValue / exchangeData[currencyCode]).toFixed(4)
-            : (
-                inputValue *
-                generateExchangeRate(
-                  exchangeData[currencyCode],
-                  exchangeData[selectedCurrency],
-                )
+            ? exchangeData[currencyCode].toFixed(4)
+            : generateExchangeRate(
+                exchangeData[selectedCurrency],
+                exchangeData[currencyCode],
               ).toFixed(4)}{" "}
-          {selectedCurrency}
+          {currencyCode}
         </p>
       )}
 
@@ -89,7 +85,19 @@ export default function Card({
           type="number"
           name="amount"
           placeholder="Please Input The Amount You Wish To Exchange"
-          value={localInputValue}
+          value={
+            activeCardIndex === cardIndex
+              ? localInputValue
+              : selectedCurrency === "EUR"
+              ? (inputValue / exchangeData[currencyCode]).toFixed(4)
+              : (
+                  inputValue /
+                  generateExchangeRate(
+                    exchangeData[currencyCode],
+                    exchangeData[selectedCurrency],
+                  )
+                ).toFixed(4)
+          }
           onChange={(e) => setLocalInputValue(e.target.value)}
           onFocus={() => setActiveCardIndex(cardIndex)}
           onBlur={(e) => {
