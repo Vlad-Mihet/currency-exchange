@@ -70,7 +70,7 @@ function App() {
       console.log(dateHelperState.getTime(), date.getTime());
 
       const result = await axios.get(
-        `http://api.exchangeratesapi.io/v1/${year}-${month}-${day}?access_key=${process.env.REACT_APP_EXCHANGE_RATE_API}&base=EUR`,
+        `http://api.exchangeratesapi.io/v1/${year}-${month}-${day}?access_key=27e85f9d365fddc071250b1c4f695aca&base=EUR`,
       );
 
       setExchangeData(result.data.rates);

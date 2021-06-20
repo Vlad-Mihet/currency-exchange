@@ -24,12 +24,17 @@ export default function Card({
   // We'll use an adittional card-based input value state to not change all of the other cards' values
 
   const [localInputValue, setLocalInputValue] = useState(inputValue);
-  const [inFocus, setInFocus] = useState(false);
-
-  console.log(currencyFlag);
 
   useEffect(() => {
-    setLocalInputValue(inputValue);
+    setLocalInputValue(
+      (
+        inputValue /
+        generateExchangeRate(
+          exchangeData[currencyCode],
+          exchangeData[selectedCurrency],
+        )
+      ).toFixed(4),
+    );
   }, [inputValue]);
 
   return (
@@ -89,7 +94,7 @@ export default function Card({
             activeCardIndex === cardIndex
               ? localInputValue
               : selectedCurrency === "EUR"
-              ? (inputValue / exchangeData[currencyCode]).toFixed(4)
+              ? inputValue * exchangeData[currencyCode]
               : (
                   inputValue /
                   generateExchangeRate(
