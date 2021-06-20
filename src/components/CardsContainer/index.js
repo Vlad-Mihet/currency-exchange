@@ -2,6 +2,12 @@ import React from "react";
 import Card from "../Card";
 import styles from "./index.module.scss";
 
+/* // ***** //
+
+Cards Container will the container for all of the currency Cards
+
+// ***** // */
+
 export default function CardsContainer({
   selectedCurrency,
   setSelectedCurrency,

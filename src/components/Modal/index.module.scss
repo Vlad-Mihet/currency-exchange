@@ -1,4 +1,5 @@
 .overshadow {
+  // This will represent the gray background we'll apply over the application interface to show the modal
   position: fixed;
   left: 0;
   top: 0;
@@ -21,6 +22,8 @@
     align-items: flex-end;
 
     .cards__container {
+      // For the layout of the exhange cards in the modal we'll be using a grid system, as it's the more reliable option
+
       flex: 1;
       width: 100%;
       display: grid;

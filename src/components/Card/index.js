@@ -23,6 +23,7 @@ export default function Card({
   // As we'll use inputValue as a global input state to retain the value according to which we'll convert,
   // We'll use an adittional card-based input value state to not change all of the other cards' values
 
+  // localInputValue will be the go-to state when directly modifying an input's value from a card
   const [localInputValue, setLocalInputValue] = useState(inputValue);
 
   useEffect(() => {
@@ -40,7 +41,14 @@ export default function Card({
   return (
     <div
       className={
-        activeCardIndex === cardIndex ? styles.activeCard : styles.defaultCard
+        activeCardIndex === cardIndex
+          ? // activeCard will be the class of an in-focus card, for example the card for which we'll change the input
+            styles.activeCard
+          : selectedCurrency === currencyCode
+          ? // activeCurrencyCard will represent the card whose currency is the selected one
+            styles.activeCurrencyCard
+          : // The defaultCard class will represent the rest of the cards which are not active
+            styles.defaultCard
       }>
       <FontAwesomeIcon
         icon={faTimes}
@@ -74,7 +82,10 @@ export default function Card({
       {selectedCurrency && (
         <p>
           1 {selectedCurrency} ={" "}
-          {selectedCurrency === "EUR"
+          {selectedCurrency === currencyCode
+            ? 1
+            : // Since EUR is the base currency we'll have a verification case done specifically for it to make our work easier and more exact when it comes to the conversion rate
+            selectedCurrency === "EUR"
             ? exchangeData[currencyCode].toFixed(4)
             : generateExchangeRate(
                 exchangeData[selectedCurrency],
@@ -110,6 +121,7 @@ export default function Card({
             // We'll update the other cards' values as well in order to have the default value
             // for which we'll convert
 
+            // When we take the focus out of a card's input we'll want to mark it as the amount we'll want to exchange to the rest of the currencies
             setInputValue(e.target.value);
             activeCardIndex === cardIndex && setActiveCardIndex(null);
 

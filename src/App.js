@@ -8,8 +8,6 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 
 function App() {
-  // Exchange Rates Data State
-
   // This will change whenever a new currency is used as the base currency
   const [exchangeData, setExchangeData] = useState({});
 
@@ -41,11 +39,13 @@ function App() {
   // We'll import the currencies data from the currencies.json file
   let data = require("./currencies.json");
 
+  // We'll restring scrolling while the modal is open
   useEffect(() => {
     showModal && document.body.setAttribute("style", "overflow: hidden");
     !showModal && document.body.setAttribute("style", "overflow: unset");
   }, [showModal]);
 
+  // The function for requesting data from the exhange rates api asynchrounously with some additional condition checking
   const requestExchangeRatesData = async () => {
     let day = date.getDate();
     let month = date.getMonth();
@@ -87,6 +87,7 @@ function App() {
 
   return (
     <div className="App">
+      {/* Helmet is a npm library that eases the work we have to do to add SEO, as well as changing the title of the web application */}
       <Helmet>
         <title>Currency Exchange | Vlad Mihet</title>
         <meta charSet="UTF-8" />
@@ -97,6 +98,7 @@ function App() {
         <div className={styles.top__wrapper}>
           <h1>Currency Exchange</h1>
           <div className={styles.picker__wrapper}>
+            {/* Date Picker will be the component we'll be using for picking a date for which we'll show currencies */}
             <DatePicker
               date={date}
               setDate={setDate}

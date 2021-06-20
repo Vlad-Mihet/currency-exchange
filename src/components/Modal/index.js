@@ -17,6 +17,7 @@ export default function Modal({
   // We'll use a focus state to know when the input is being in focus
   const [searchFocus, setSearchFocus] = useState(false);
 
+  // We'll use this function to detect a click outside the modal container
   function useOutsideAlerter(ref, setShowModal) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -37,13 +38,11 @@ export default function Modal({
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, setShowModal);
 
-  useEffect(() => {
-    console.log(activeCurrencies);
-  }, [activeCurrencies]);
-
   return (
     <div className={styles.overshadow}>
+      {/* By using this ref property we'll make a reference to the created wrapperRef to mark the .container div as the object for which we'll listen to outside clicks */}
       <div ref={wrapperRef} className={styles.container}>
+        {/* Search Input will be the Search Bar Component we'll use for searching up currencies */}
         <SearchInput
           searchFocus={searchFocus}
           setSearchFocus={setSearchFocus}
@@ -63,9 +62,13 @@ export default function Modal({
               moment.
             </p>
           ) : (
+            // Here we'll filter currencies based on a couple of factors:
             currencyData.map(
               (data, index) =>
+                // Whether or not the currency is already present in the main UI
                 !activeCurrencies.includes(data.id) &&
+                // Whether or not it's being searched for in the search bar
+                // We'll search based on both the currency code and the currency's name
                 (data.currencyCode
                   .toLowerCase()
                   .includes(searchInputValue.toLowerCase()) ||
@@ -91,6 +94,7 @@ export default function Modal({
         <div className={styles.bottom__wrapper}>
           <span onClick={() => setSelectedCurrencies([])}>Unselect All</span>
           <button
+            // When we click the add button we'll bring all the selected currencies in the active currencies main interface
             onClick={() => {
               setActiveCurrencies((prevState) => [
                 ...prevState,
