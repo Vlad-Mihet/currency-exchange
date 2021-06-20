@@ -1,7 +1,7 @@
 # Start Up The Application
 
-## First of all you will need to install all of the bundles and extensions.\
-You can do so by running the `npm install` command, after which you can follow any of the following steps;\
+## First of all you will need to install all of the bundles and extensions.
+You can do so by running the `npm install` command, after which you can follow any of the following steps;
 
 # 1. In Development Mode:
 
