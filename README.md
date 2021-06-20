@@ -1,5 +1,8 @@
 # Start Up The Application
 
+## First of all you will need to install all of the bundles and extensions.\
+You can do so by running the `npm install` command, after which you can follow any of the following steps;\
+
 # 1. In Development Mode:
 
 ### `npm start`
@@ -19,5 +22,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ### `serve -s build`
 
-This will run the production build .\
+This will run the production build.\
 Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
